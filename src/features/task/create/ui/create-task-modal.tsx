@@ -2,19 +2,28 @@ import { UiModal } from "@/shared/ui/ui-modal";
 import { UiButton } from "@/shared/ui/ui-button";
 import { Controller, useForm } from "react-hook-form";
 import { UiTextField } from "@/shared/ui/ui-text-field";
-import { useCreateBoard } from "../model/use-create-board";
+import { useCreateTask } from "../model/use-create-task";
+import { CreateTaskData } from "@/entities/task";
+import { BoardMultiSelect } from "@/entities/board";
+import { useSession } from "@/entities/session";
 
-export function CreateTaskModal({ onClose }: { onClose: () => void }) {
-  const { control, handleSubmit } = useForm<any>({
+type CreateTaskModalProps = {
+  onClose: () => void;
+};
+
+export function CreateTaskModal({ onClose }: CreateTaskModalProps) {
+  const session = useSession((s) => s.currentSession);
+  const { control, handleSubmit } = useForm<CreateTaskData>({
     defaultValues: {
       name: "",
-      editorsIds: [],
+      description: "",
+      boardsIds: [],
     },
   });
 
-  const { createBoard } = useCreateBoard();
+  const { createTask } = useCreateTask();
 
-  const onSubmit = handleSubmit((data) => createBoard(data, onClose));
+  const onSubmit = handleSubmit((data) => createTask(data, onClose));
 
   return (
     <UiModal isOpen onClose={onClose} width="md">
@@ -24,10 +33,10 @@ export function CreateTaskModal({ onClose }: { onClose: () => void }) {
         </UiModal.Header>
         <UiModal.Body className="flex flex-col gap-4">
           Задача
-          {/* <Controller
+          <Controller
             control={control}
             name="name"
-            rules={{ required: "Название доски - обязательное поле" }}
+            rules={{ required: "Название задачи - обязательное поле" }}
             render={({ field, fieldState }) => (
               <UiTextField
                 label="Название"
@@ -36,20 +45,34 @@ export function CreateTaskModal({ onClose }: { onClose: () => void }) {
               />
             )}
           />
-
           <Controller
             control={control}
-            name="editorsIds"
-            render={({ field: { value, onChange }, fieldState }) => (
-              <UserMultiSelect
-                label="Выберете редакторов"
-                userIds={value}
-                onChangeUserIds={onChange}
+            name="description"
+            rules={{ required: "Описание задачи - обязательное поле" }}
+            render={({ field, fieldState }) => (
+              <UiTextField
+                label="Описание"
+                inputProps={{ ...field }}
                 error={fieldState.error?.message}
-                className="w-full"
               />
             )}
-          /> */}
+          />
+          {session?.userId && (
+            <Controller
+              control={control}
+              name="boardsIds"
+              render={({ field: { value, onChange }, fieldState }) => (
+                <BoardMultiSelect
+                  label="Выберете редакторов"
+                  boardIds={value}
+                  userId={session.userId}
+                  onChangeBoardIds={onChange}
+                  error={fieldState.error?.message}
+                  className="w-full"
+                />
+              )}
+            />
+          )}
         </UiModal.Body>
         <UiModal.Footer>
           <UiButton type="button" variant="outlined" onClick={onClose}>

@@ -6,6 +6,8 @@ export type Task = {
   description: string;
 };
 
-export type CreateTaskData = Omit<Task, "id">;
+export type CreateTaskData = Omit<Task, "id"> & {
+  boardsIds: string[];
+};
 
 export type UpdateTaskData = Partial<CreateTaskData>;

@@ -1,2 +1,2 @@
-export { useCanCreateBoard } from "./model/use-can-create-board";
+export { useCanCreateTask } from "./model/use-can-create-task";
 export { CreateTaskButton } from "./ui/create-task-button";
