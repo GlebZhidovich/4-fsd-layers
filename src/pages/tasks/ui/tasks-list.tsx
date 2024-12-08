@@ -1,13 +1,11 @@
 import { BoardList } from "@/entities/board/ui/board-list";
 import { useTasks } from "@/entities/task";
-import { ROUTER_PATHS } from "@/shared/constants/routes";
-import { generatePath } from "react-router-dom";
-
-const boardUrl = (boardId: string) =>
-  generatePath(ROUTER_PATHS.HOME + ROUTER_PATHS.BOARD, { boardId });
+import { UserPreview, useUsers } from "@/entities/user";
+import { RemoveTaskButton } from "@/features/task/remove";
 
 export function TasksList({ className }: { className?: string }) {
   const { tasks } = useTasks();
+  const users = useUsers((s) => s.usersMap());
 
   return (
     <div className={className}>
@@ -15,6 +13,7 @@ export function TasksList({ className }: { className?: string }) {
       <table className="w-full">
         <thead>
           <tr>
+            <th className="text-start">Автор:</th>
             <th className="text-start">Название:</th>
             <th className="text-start">Описание:</th>
             <th className="text-start">Доски:</th>
@@ -24,6 +23,9 @@ export function TasksList({ className }: { className?: string }) {
         <tbody>
           {tasks.map((task) => (
             <tr key={task.id} className="px-5 py-2 border-b border-b-slate-3 ">
+              <td className="p-2">
+                <UserPreview size="md" {...users[task.userId]} />
+              </td>
               <td className="p-2">
                 <span className="text-xl">{task.name}</span>
               </td>
@@ -35,12 +37,12 @@ export function TasksList({ className }: { className?: string }) {
               </td>
               <td className="p-2"></td>
 
-              {/* <td className="p-2">
+              <td className="p-2">
                 <div className="flex gap-2 ml-auto">
-                  <UpdateBoardButton boardId={board.id} />
-                  <RemoveBoardButton boardId={board.id} />
+                  {/* <UpdateBoardButton boardId={board.id} /> */}
+                  <RemoveTaskButton taskId={task.id} />
                 </div>
-              </td> */}
+              </td>
             </tr>
           ))}
         </tbody>

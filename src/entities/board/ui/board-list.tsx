@@ -10,7 +10,7 @@ export function BoardList({ boardsIds }: BoardListProps) {
   return (
     <ul className="text-m">
       {boardsIds.map((boardId) => (
-        <li>{boards.get(boardId)}</li>
+        <li key={boardId}>{boards.get(boardId)}</li>
       ))}
     </ul>
   );
