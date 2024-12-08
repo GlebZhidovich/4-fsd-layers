@@ -2,6 +2,7 @@ import { BoardList } from "@/entities/board/ui/board-list";
 import { useTasks } from "@/entities/task";
 import { UserPreview, useUsers } from "@/entities/user";
 import { RemoveTaskButton } from "@/features/task/remove";
+import { UpdateTaskButton } from "@/features/task/update";
 
 export function TasksList({ className }: { className?: string }) {
   const { tasks } = useTasks();
@@ -39,7 +40,7 @@ export function TasksList({ className }: { className?: string }) {
 
               <td className="p-2">
                 <div className="flex gap-2 ml-auto">
-                  {/* <UpdateBoardButton boardId={board.id} /> */}
+                  <UpdateTaskButton taskId={task.id} />
                   <RemoveTaskButton taskId={task.id} />
                 </div>
               </td>

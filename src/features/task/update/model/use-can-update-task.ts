@@ -1,7 +1,7 @@
 import { Session, useSession } from "@/entities/session";
 import { Task, useTasks } from "@/entities/task";
 
-function canRemoveTask(task?: Task, session?: Session) {
+function canUpdateTask(task?: Task, session?: Session) {
   if (!task) {
     return false;
   }
@@ -9,9 +9,9 @@ function canRemoveTask(task?: Task, session?: Session) {
   return task.userId === session?.userId;
 }
 
-export function useCanRemoveTask(taskId: string) {
+export function useCanUpdateTask(taskId: string) {
   const session = useSession((s) => s.currentSession);
-  const task = useTasks((s) => s.getTaskById(taskId));
+  const task = useTasks((s) => s.tasks.find((t) => t.id === taskId));
 
-  return canRemoveTask(task, session);
+  return canUpdateTask(task, session);
 }
